@@ -1,0 +1,12 @@
+.icon-logo,
+.icon-stroke {
+  background-image: url(sprite.png);
+  background-position: 0 0;
+  width: 200px;
+  height: 200px;
+}
+.icon-stroke {
+  background-position: -220px 0;
+  width: 64px;
+  height: 64px;
+}

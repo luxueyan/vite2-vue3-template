@@ -1,0 +1,12 @@
+@custom-selector :--heading h1, h2, h3;
+
+:root {
+	--color-blue: blue;
+	--color-yellow: yellow;
+	--color-orange: orange;
+	/* --centered: {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}; */
+}

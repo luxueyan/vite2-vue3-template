@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="104px" height="104px" viewBox="0 0 104 104" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.1 (67048) - http://www.bohemiancoding.com/sketch -->
+    <title>方形</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-64.7%" y="-63.8%" width="229.3%" height="227.6%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="10" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="7.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.364049838   0 0 0 0 0.445566797   0 0 0 0 0.531754889  0 0 0 0.341711957 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#F6FCFF" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="-8.63387795%" x2="106.403093%" y2="96.9101218%" id="linearGradient-3">
+            <stop stop-color="#92D7FF" offset="0%"></stop>
+            <stop stop-color="#F0F0F0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="6.39134819%" y1="60.589198%" x2="96.2635877%" y2="39.5982741%" id="linearGradient-4">
+            <stop stop-color="#FBFBFB" offset="0%"></stop>
+            <stop stop-color="#C6D9E2" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="dashboard" transform="translate(-557.000000, -113.000000)" fill-rule="nonzero">
+            <g id="算力统计-copy-2" transform="translate(170.000000, 66.000000)">
+                <g id="方形" filter="url(#filter-1)" transform="translate(402.000000, 51.000000)">
+                    <polygon id="Rectangle" fill="url(#linearGradient-2)" points="0 17.3208899 37 0 37 44.6791101 0 62"></polygon>
+                    <polygon id="Rectangle-Copy" fill="url(#linearGradient-3)" points="74 15.9326333 37 -2.26526946e-13 37 43.8361459 74 58"></polygon>
+                    <polygon id="Rectangle" fill="url(#linearGradient-4)" points="0 61.5455693 37 43.3149414 74.2202148 57.4389648 36.2814536 76"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
