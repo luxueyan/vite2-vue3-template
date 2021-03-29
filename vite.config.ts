@@ -36,7 +36,7 @@ export default defineConfig({
     },
   },
   server: {
-    open: '/src/pages/demo/',
+    open: '/src/pages/auth/',
     proxy: {
       '/api': {
         target: defaultProxy,

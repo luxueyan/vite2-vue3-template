@@ -1,15 +1,17 @@
-import qs from 'qs'
-import axios, { Method, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { urlMatcher } from '@/common/utils'
+import { LocalState } from '@/store/index'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+// import { urlMatcher } from '@/common/utils'
 // import { isObject } from 'lodash'
-import Enums from '@/common/enums'
-import store from '@/store'
+// import Enums from '@/common/enums'
+// import store from '@/store'
 import createDebug from 'debug'
-import { merge } from 'lodash-es'
+import qs from 'qs'
+import { Store } from 'vuex'
+// import { merge } from 'lodash-es'
 // import apis from 'globby!@/pages/**/api.ts'
-import useSWRV, { IConfig } from 'swrv'
+// import useSWRV, { IConfig } from 'swrv'
 
-type AxiosRequestConfigExtend = AxiosRequestConfig & {
+export type AxiosRequestConfigExtend = AxiosRequestConfig & {
   noAlert?: boolean // 不弹出错误提示
   skipAuth?: boolean // 不走权限校验，403不会跳到登录页
   loadingMaskTarget?: string // ajax请求的遮罩层
@@ -17,7 +19,7 @@ type AxiosRequestConfigExtend = AxiosRequestConfig & {
 }
 
 const debug = createDebug('common:api')
-const { RetCode } = Enums
+// const { RetCode } = Enums
 // console.log(RetCode)
 const i18n = { t: (msg: string) => {} } // eslint-disable-line
 // const store = useStore()
@@ -72,161 +74,165 @@ function getLoadingUrl(config: AxiosRequestConfig) {
   )
 }
 
-export const http = axios.create({
-  baseURL: <string>import.meta.env.VITE_API_BASE,
-  timeout: 90000,
-  paramsSerializer: function (params) {
-    return qs.stringify(params, { arrayFormat: 'repeat' })
-  },
-  transformRequest: [
-    (data, headers) => {
-      const contentType = getContentType(headers)
-      if (data && contentType === 'urlencoded') {
-        return qs.stringify(data)
-      } else if (data && contentType === 'json') {
-        return JSON.stringify(data)
-      }
-      return data
+export default function createHttp({ store }: { store: Store<LocalState> }) {
+  const http: AxiosInstance = axios.create({
+    baseURL: <string>import.meta.env.VITE_API_BASE,
+    timeout: 90000,
+    paramsSerializer: function (params) {
+      return qs.stringify(params, { arrayFormat: 'repeat' })
     },
-  ],
-})
-http.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
-http.interceptors.request.use((config: AxiosRequestConfigExtend) => {
-  // store.state.token是认证系统， window.token多页面其他系统
-  if (store.state.token && !config.headers.common.Authorization) {
-    // config.headers.common['Authorization'] = 'Bearer ' + store.state.token
-    config.headers.common.Authorization = store.state.token
-  }
-  // config.url = urlMatcher(config.url, config.pathParams)
-
-  if (config.loadingMaskTarget) {
-    const loadingUrl =
-      (config?.baseURL || '') +
-      (config?.url || '') +
-      (getContentType(config.headers) === 'json' ? config.paramsSerializer!(config.data) : config.data) +
-      config.paramsSerializer!(config.params)
-    closeLoading(loadingUrl)
-
-    loadingInstances[loadingUrl] = Toast.loading({
-      message: '加载中...',
-      forbidClick: true,
-      loadingType: 'spinner',
-    })
-  }
-  return config
-})
-http.interceptors.response.use(
-  (res) => {
-    closeLoading(getLoadingUrl(res.config))
-    // console.log(res.config)
-    const data = res.data
-    const config: AxiosRequestConfigExtend = res.config
-    // data.result ||= data.Result
-    // console.log(RetCode.ERR, data)
-    // debugger
-    if (!data.code || data.code === RetCode.OK) {
-      return res
-    } else if (config.noAlert) {
-      return Promise.reject(res)
-    } else {
-      msgBoxErr(data.msg || '请求失败！', data.code)
+    transformRequest: [
+      (data, headers) => {
+        const contentType = getContentType(headers)
+        if (data && contentType === 'urlencoded') {
+          return qs.stringify(data)
+        } else if (data && contentType === 'json') {
+          return JSON.stringify(data)
+        }
+        return data
+      },
+    ],
+  })
+  http.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
+  http.interceptors.request.use((config: AxiosRequestConfigExtend) => {
+    // store.state.token是认证系统， window.token多页面其他系统
+    if (store.state.token && !config.headers.common.Authorization) {
+      // config.headers.common['Authorization'] = 'Bearer ' + store.state.token
+      config.headers.common.Authorization = store.state.token
     }
+    // config.url = urlMatcher(config.url, config.pathParams)
 
-    return Promise.reject(res)
-  },
-  (err) => {
-    debug(err, JSON.parse(JSON.stringify(err)))
-    err.config && closeLoading(getLoadingUrl(err.config))
-    if (err.response) {
-      const status = err.response.status
-      // if (isObject(err.response.data)) { // 暂时先注释，不知道为什么不报错就是影响加载
-      //   err.response.data.msg = err.response.data.msg || err.response.data.Msg
-      // }
-      if (err.response.config.noAlert) return Promise.reject(err)
-      // const router = store._router
-      // if (status === 401 || status === 419 || status === 403) {
-      if (status === 401 || status === 419) {
-        if (err.response.config.skipAuth) {
-          store.dispatch('logout', { silent: true })
+    if (config.loadingMaskTarget) {
+      const loadingUrl =
+        (config?.baseURL || '') +
+        (config?.url || '') +
+        (getContentType(config.headers) === 'json' ? config.paramsSerializer!(config.data) : config.data) +
+        config.paramsSerializer!(config.params)
+      closeLoading(loadingUrl)
+
+      loadingInstances[loadingUrl] = Toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        loadingType: 'spinner',
+      })
+    }
+    return config
+  })
+  http.interceptors.response.use(
+    (res) => {
+      closeLoading(getLoadingUrl(res.config))
+      // console.log(res.config)
+      const data = res.data
+      const config: AxiosRequestConfigExtend = res.config
+      // data.result ||= data.Result
+      // console.log(RetCode.ERR, data)
+      // debugger
+      if (!data.code || data.code === 0) {
+        return res
+      } else if (config.noAlert) {
+        return Promise.reject(res)
+      } else {
+        msgBoxErr(data.msg || '请求失败！', data.code)
+      }
+
+      return Promise.reject(res)
+    },
+    (err) => {
+      debug(err, JSON.parse(JSON.stringify(err)))
+      err.config && closeLoading(getLoadingUrl(err.config))
+      if (err.response) {
+        const status = err.response.status
+        // if (isObject(err.response.data)) { // 暂时先注释，不知道为什么不报错就是影响加载
+        //   err.response.data.msg = err.response.data.msg || err.response.data.Msg
+        // }
+        if (err.response.config.noAlert) return Promise.reject(err)
+        // const router = store._router
+        // if (status === 401 || status === 419 || status === 403) {
+        if (status === 401 || status === 419) {
+          if (err.response.config.skipAuth) {
+            store.dispatch('logout', { silent: true })
+            return Promise.reject(err)
+          } else {
+            store.dispatch('logout', { silent: false })
+            msgBoxErr(diposeInvalidGrant(err.response.data.msg) || '权限错误', 400)
+            return Promise.reject(err)
+          }
+        } else if (status === 400 || status === 400) {
+          msgBoxErr(diposeInvalidGrant(err.response.data.msg) || '请求失败', 400)
           return Promise.reject(err)
-        } else {
-          store.dispatch('logout', { silent: false })
-          msgBoxErr(diposeInvalidGrant(err.response.data.msg) || '权限错误', 400)
+        } else if (status === 478) {
+          msgBoxErr(diposeInvalidGrant(err.response.data.msg) || '请求失败', 400)
           return Promise.reject(err)
         }
-      } else if (status === 400 || status === 400) {
-        msgBoxErr(diposeInvalidGrant(err.response.data.msg) || '请求失败', 400)
-        return Promise.reject(err)
-      } else if (status === 478) {
-        msgBoxErr(diposeInvalidGrant(err.response.data.msg) || '请求失败', 400)
+        msgBoxErr('服务器忙', status)
         return Promise.reject(err)
       }
-      msgBoxErr('服务器忙', status)
+      if (!err.config.noAlert) {
+        msgBoxErr(err.message.indexOf('timeout') > -1 ? '请求超时' : '服务器忙', 'SERVER')
+      }
       return Promise.reject(err)
-    }
-    if (!err.config.noAlert) {
-      msgBoxErr(err.message.indexOf('timeout') > -1 ? '请求超时' : '服务器忙', 'SERVER')
-    }
-    return Promise.reject(err)
-  },
-)
-
-// 构造接口数据
-export interface ApiConfig {
-  name: string
-  url: string
-  methods: Method[]
-  proxy?: string
-  transformResponse?(res: string): AxiosResponse
+    },
+  )
+  return http
 }
 
-export type ApiInstance = {
-  [k in string]?:
-    | Record<Method, (data: Record<string | number, any>, config: AxiosRequestConfigExtend) => any>
-    | Record<string, any>
-}
+// // 构造接口数据
+// export interface ApiConfig {
+//   name: string
+//   url: string
+//   methods: Method[]
+//   proxy?: string
+//   transformResponse?(res: string): AxiosResponse
+// }
 
-const apiMap: ApiInstance = {}
-const apiPaths: string[] = []
-const apis = import.meta.globEager('../pages/**/api.ts')
-// console.log(apis)
-Object.keys(apis).forEach((k) => {
-  apis[k].default.forEach((v: ApiConfig) => {
-    if (apiMap[v.name]) throw new Error(`${v.name}的API名称重复`)
-    if (apiPaths.find((ap) => ap === v.url)) {
-      throw new Error(`${v.url}接口路径重复`)
-    }
-    apiMap[v.name] = {}
-    apiPaths.push(v.url)
-    if (!Array.isArray(v.methods)) {
-      throw new Error(`${v.name}的methods不是数组`)
-    }
-    v.methods.forEach((m: Method) => {
-      apiMap[v.name]![m] = (
-        data: any,
-        config: AxiosRequestConfigExtend,
-        swrConfig: IConfig = { revalidateOnFocus: false, revalidateDebounce: 1000 },
-      ) => {
-        const configObj: AxiosRequestConfigExtend = {}
-        if (v.proxy) configObj.params = { _proxy: v.proxy }
-        if (v.transformResponse) configObj.transformResponse = [v.transformResponse]
+// export type ApiInstance = {
+//   [k in string]?:
+//     | Record<Method, (data: Record<string | number, any>, config: AxiosRequestConfigExtend) => any>
+//     | Record<string, any>
+// }
 
-        /* eslint-disable indent */
-        return m === 'get' || m === 'delete'
-          ? useSWRV(
-              urlMatcher(v.url, config?.pathParams),
-              (url: string) => http[m](url, merge({ params: data }, configObj, config)).then((res) => res.data.data),
-              swrConfig,
-            )
-          : useSWRV(
-              urlMatcher(v.url, config?.pathParams),
-              (url: string) => http[m](url, data, merge(configObj, config)).then((res: { data: { data: any } }) => res.data.data),
-              swrConfig,
-            )
-        /* eslint-enable indent */
-      }
-    })
-  })
-})
+// const apiMap: ApiInstance = {}
+// const apiPaths: string[] = []
+// const apis = import.meta.globEager('../pages/**/api.ts')
+// // console.log(apis)
+// Object.keys(apis).forEach((k) => {
+//   apis[k].default.forEach((v: ApiConfig) => {
+//     if (apiMap[v.name]) throw new Error(`${v.name}的API名称重复`)
+//     if (apiPaths.find((ap) => ap === v.url)) {
+//       throw new Error(`${v.url}接口路径重复`)
+//     }
+//     apiMap[v.name] = {}
+//     apiPaths.push(v.url)
+//     if (!Array.isArray(v.methods)) {
+//       throw new Error(`${v.name}的methods不是数组`)
+//     }
+//     v.methods.forEach((m: Method) => {
+//       apiMap[v.name]![m] = (
+//         data: any,
+//         config: AxiosRequestConfigExtend,
+//         swrConfig: IConfig = { revalidateOnFocus: false, revalidateDebounce: 1000 },
+//       ) => {
+//         const configObj: AxiosRequestConfigExtend = {}
+//         if (v.proxy) configObj.params = { _proxy: v.proxy }
+//         if (v.transformResponse) configObj.transformResponse = [v.transformResponse]
 
-export default apiMap
+//         /* eslint-disable indent */
+//         return m === 'get' || m === 'delete'
+//           ? useSWRV(
+//               urlMatcher(v.url, config?.pathParams),
+//               (url: string) => http[m](url, merge({ params: data }, configObj, config)).then((res) => res.data.data),
+//               swrConfig,
+//             )
+//           : useSWRV(
+//               urlMatcher(v.url, config?.pathParams),
+//               (url: string) =>
+//                 http[m](url, data, merge(configObj, config)).then((res: { data: { data: any } }) => res.data.data),
+//               swrConfig,
+//             )
+//         /* eslint-enable indent */
+//       }
+//     })
+//   })
+// })
+
+// export default apiMap

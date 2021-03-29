@@ -1,12 +1,12 @@
-import { defineComponent, ref } from 'vue'
-import styles from './demo.module.css'
-// import imgs from 'globby!/@/assets/image/**/*.@(jpg|png)'
-import './demo.css'
 import { customProperties } from '@/assets/css/_var.mjs'
 import createDebug from 'debug'
+import { defineComponent, ref } from 'vue'
 // import enums from '/@/common/enums'
-import { useRoute, useRouter, RouterLink } from 'vue-router'
-import HelloWorld from '@/components/HelloWorld.vue'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
+// import imgs from 'globby!/@/assets/image/**/*.@(jpg|png)'
+import './demo.css'
+import styles from './demo.module.css'
+// import HelloWorld from '@/components/HelloWorld.vue'
 // import Api from '/@/common/api'
 // import router from '/@/router'
 // import {Component} from 'vue'
@@ -67,7 +67,7 @@ export default defineComponent((props, context) => {
 
   return () => (
     <section>
-      <RouterLink to={{ name: 'auth' }}>{() => 'to auth'}</RouterLink>
+      <RouterLink to={{ name: 'demo' }}>{() => 'to auth'}</RouterLink>
       <h3>我的 demo</h3>
       <Parent></Parent>
       <Btn></Btn>
@@ -80,7 +80,6 @@ export default defineComponent((props, context) => {
         <i class="icon-3">3</i>
         <i class="icon-4">4</i>
       </div>
-      <HelloWorld msg={'hello msg'}></HelloWorld>
     </section>
   )
 })

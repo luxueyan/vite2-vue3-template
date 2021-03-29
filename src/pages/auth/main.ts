@@ -8,7 +8,7 @@ app.use(store)
 app.use(filter)
 router.run(app)
 
-app.config.globalProperties.systemName = localStorage.systemName = '权限系统'
+app.config.globalProperties.systemName = localStorage.systemName = 'AI认证系统'
 // debug模式
 localStorage.debug = import.meta.env.VITE_DEBUG_MODULE
 

@@ -7,7 +7,7 @@ const children: RouteRecordRaw[] = Object.keys(routes)
 
 export default [
   {
-    path: '/demo',
+    path: '/maintain',
     name: 'root',
     redirect: { name: 'demo' },
     component: () => import('pages/_components/Layout.vue'),

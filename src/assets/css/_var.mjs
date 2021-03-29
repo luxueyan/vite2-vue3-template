@@ -6,7 +6,7 @@ export const customProperties = {
 	'--color-blue': 'blue',
 	'--color-yellow': 'yellow',
 	'--color-orange': 'orange',
-	'--antd-wave-shadow-color': '#1890ff'
+	'--color-demo': 'gray'
 };
 
 export const customSelectors = {
