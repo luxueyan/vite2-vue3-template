@@ -25,7 +25,6 @@ export interface LocalRouterOption {
 }
 
 function createLocalRouter({ store, routes, Api }: LocalRouterOption) {
-  // debug(store, Api)
   const router: Router = createRouter({
     history: import.meta.env.PROD ? createWebHistory() : createWebHashHistory(),
     routes,

@@ -1,15 +1,8 @@
 import { LocalState } from '@/store/index'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
-// import { urlMatcher } from '@/common/utils'
-// import { isObject } from 'lodash'
-// import Enums from '@/common/enums'
-// import store from '@/store'
 import createDebug from 'debug'
 import qs from 'qs'
 import { Store } from 'vuex'
-// import { merge } from 'lodash-es'
-// import apis from 'globby!@/pages/**/api.ts'
-// import useSWRV, { IConfig } from 'swrv'
 
 export type AxiosRequestConfigExtend = AxiosRequestConfig & {
   noAlert?: boolean // 不弹出错误提示
@@ -19,8 +12,6 @@ export type AxiosRequestConfigExtend = AxiosRequestConfig & {
 }
 
 const debug = createDebug('common:api')
-// const { RetCode } = Enums
-// console.log(RetCode)
 const i18n = { t: (msg: string) => {} } // eslint-disable-line
 // const store = useStore()
 const Toast = {
@@ -32,10 +23,6 @@ const loadingInstances: Record<string, any> = {}
 
 function msgBoxErr(message: string, code: string | number) {
   alert(message + code)
-  // Notify({
-  //   message: message,
-  //   type: 'warning',
-  // })
 }
 
 function getContentType(headers: { [x: string]: string | string[] }) {
@@ -175,64 +162,3 @@ export default function createHttp({ store }: { store: Store<LocalState> }) {
   )
   return http
 }
-
-// // 构造接口数据
-// export interface ApiConfig {
-//   name: string
-//   url: string
-//   methods: Method[]
-//   proxy?: string
-//   transformResponse?(res: string): AxiosResponse
-// }
-
-// export type ApiInstance = {
-//   [k in string]?:
-//     | Record<Method, (data: Record<string | number, any>, config: AxiosRequestConfigExtend) => any>
-//     | Record<string, any>
-// }
-
-// const apiMap: ApiInstance = {}
-// const apiPaths: string[] = []
-// const apis = import.meta.globEager('../pages/**/api.ts')
-// // console.log(apis)
-// Object.keys(apis).forEach((k) => {
-//   apis[k].default.forEach((v: ApiConfig) => {
-//     if (apiMap[v.name]) throw new Error(`${v.name}的API名称重复`)
-//     if (apiPaths.find((ap) => ap === v.url)) {
-//       throw new Error(`${v.url}接口路径重复`)
-//     }
-//     apiMap[v.name] = {}
-//     apiPaths.push(v.url)
-//     if (!Array.isArray(v.methods)) {
-//       throw new Error(`${v.name}的methods不是数组`)
-//     }
-//     v.methods.forEach((m: Method) => {
-//       apiMap[v.name]![m] = (
-//         data: any,
-//         config: AxiosRequestConfigExtend,
-//         swrConfig: IConfig = { revalidateOnFocus: false, revalidateDebounce: 1000 },
-//       ) => {
-//         const configObj: AxiosRequestConfigExtend = {}
-//         if (v.proxy) configObj.params = { _proxy: v.proxy }
-//         if (v.transformResponse) configObj.transformResponse = [v.transformResponse]
-
-//         /* eslint-disable indent */
-//         return m === 'get' || m === 'delete'
-//           ? useSWRV(
-//               urlMatcher(v.url, config?.pathParams),
-//               (url: string) => http[m](url, merge({ params: data }, configObj, config)).then((res) => res.data.data),
-//               swrConfig,
-//             )
-//           : useSWRV(
-//               urlMatcher(v.url, config?.pathParams),
-//               (url: string) =>
-//                 http[m](url, data, merge(configObj, config)).then((res: { data: { data: any } }) => res.data.data),
-//               swrConfig,
-//             )
-//         /* eslint-enable indent */
-//       }
-//     })
-//   })
-// })
-
-// export default apiMap

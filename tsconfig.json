@@ -16,7 +16,8 @@
       "assets/*": ["src/assets/*"],
       "pages/*": ["src/pages/*"],
       "auth/*": ["src/pages/auth/*"],
-      "demo/*": ["src/pages/demo/*"]
+      "demo/*": ["src/pages/demo/*"],
+      "maintain/*": ["src/pages/maintain/*"]
     },
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]

@@ -1,7 +1,10 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import tsconfigPaths from 'vite-tsconfig-paths'
 import path from 'path'
+import html from 'vite-plugin-html'
+import fs from 'fs'
 
 const { resolve } = path
 
@@ -11,17 +14,34 @@ const proxyMap = {
   prod: 'http://bm.bjqingniu.com',
 }
 const defaultProxy = proxyMap.local
+const mode = process.env.model || 'development'
+const env = loadEnv(mode, __dirname)
 
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [
+    vue(),
+    vueJsx(),
+    tsconfigPaths(),
+    html({
+      inject: {
+        injectData: {
+          authInject: fs.readFileSync(path.resolve(__dirname, './src/pages/_auth.ejs')),
+          sysConfig: fs.readFileSync(path.resolve(__dirname, './src/pages/_sysConfig.ejs')),
+          BASE_URL: process.env.BASE_URL,
+          ...env,
+        },
+      },
+      minify: true,
+    }),
+  ],
   resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src'),
-      pages: resolve(__dirname, 'src/pages'),
-      auth: resolve(__dirname, 'src/pages/auth'),
-      demo: resolve(__dirname, 'src/pages/demo'),
-      assets: resolve(__dirname, 'src/assets'),
-    },
+    // alias: {
+    //   '@': resolve(__dirname, 'src'),
+    //   pages: resolve(__dirname, 'src/pages'),
+    //   auth: resolve(__dirname, 'src/pages/auth'),
+    //   maintain: resolve(__dirname, 'src/pages/maintain'),
+    //   assets: resolve(__dirname, 'src/assets'),
+    // },
   },
   optimizeDeps: {
     exclude: [],
@@ -31,7 +51,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         auth: resolve(__dirname, 'src/pages/auth/index.html'),
-        demo: resolve(__dirname, 'src/pages/demo/index.html'),
+        maintain: resolve(__dirname, 'src/pages/maintain/index.html'),
       },
     },
   },

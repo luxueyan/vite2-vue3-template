@@ -1,5 +1,5 @@
 import createHttp from '@/common/api'
-import store from 'demo/store'
+import store from 'maintain/store'
 import { setupApi } from '@/common/sharedTool'
 
 const http = createHttp({ store })

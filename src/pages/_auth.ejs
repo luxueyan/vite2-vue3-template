@@ -1,0 +1,49 @@
+<style>
+  .initLoadingTips {
+    display: none;
+  }
+  .bodyLoading {
+    background: #010101;
+  }
+  .bodyLoading .initLoadingTips {
+    display: block;
+  }
+</style>
+
+<script>
+  // 用来存储当接受token慢的情况下的回调
+  let currnetOrigin = window.location.origin
+  let currnetUrl = window.location.href
+  let toLoginUrl = window.SYSTEMS.VITE_AUTH_ORIGIN + '/auth/login' + '?redirect=' + encodeURIComponent(currnetUrl)
+
+  let iframe = document.createElement('iframe')
+  let iframeSrc =
+    window.SYSTEMS.VITE_AUTH_ORIGIN + '/auth/bridge?system= ' + window.systemId + '&host=' + currnetOrigin
+  iframe.src = iframeSrc
+  iframe.style.display = 'none'
+  window.addEventListener('message', function(e) {
+    if (e.origin === window.SYSTEMS.VITE_AUTH_ORIGIN && e.data && e.data.token) {
+      document.body.classList.remove('bodyLoading')
+      if (!window.stopPermit && e.data.token === 'noload' && e.data.mustLoad) {
+        window.location.replace(toLoginUrl)
+        return
+      }
+      window.dispatchEvent(new CustomEvent('authready', { detail: e.data }))
+    }
+  })
+
+  window.addEventListener('mainready', function(e) {
+    document.body.appendChild(iframe)
+    document.body.classList.add('bodyLoading')
+  })
+
+  // 通知认证系统刷新本地token
+  window.refreshToken = function() {
+    iframe.contentWindow.postMessage(
+      {
+        message: 'refreshToken',
+      },
+      window.SYSTEMS.VITE_AUTH_ORIGIN,
+    )
+  }
+</script>

@@ -1,0 +1,12 @@
+<script>
+const protocol = window.location.protocol
+const host = window.location.hostname
+window.SYSTEMS = {
+  VITE_PEACENET_URL: protocol + '//' + host + ':9050/index',
+  VITE_OP_URL: protocol + '//' + host + (host !== 'localhost' ? ':9051' : ':8088') + '/op',
+  VITE_OPEN_URL: protocol + '//' + host + (host !== 'localhost' ? ':9052' : ':8088') + '/open/portal',
+  VITE_MAINTAIN_URL: protocol + '//' + host + (host !== 'localhost' ? ':9053' : ':8088') + '/maintain',
+  VITE_AUTH_URL: protocol + '//' + host + ':8088/auth/organization',
+  VITE_AUTH_ORIGIN: protocol + '//' + host + ':8088',
+}
+</script>

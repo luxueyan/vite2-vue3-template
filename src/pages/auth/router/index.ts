@@ -1,6 +1,6 @@
 // import App from 'demo/App.vue'
 import createLocalRouter from '@/router'
-import Api from 'demo/api'
+import Api from 'auth/api'
 import { App } from 'vue'
 import store from '../store'
 import routes from './routes'

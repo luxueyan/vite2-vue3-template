@@ -2,9 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="<%= BASE_URL %>/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI算力云运维管理平台</title>
+    <script>
+      window.systemId = "<%= VITE_MAINTAIN_SYSTEM_ID %>"
+      window.stopPermit = <%= VITE_STOP_PETMIT %>
+    </script>
+    <%- sysConfig %>
+    <%- authInject %>
   </head>
   <body>
     <div id="app"></div>

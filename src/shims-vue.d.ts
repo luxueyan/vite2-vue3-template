@@ -1,5 +1,3 @@
-import 'vue-router'
-import { Router } from 'vue-router'
 
 declare module '*.vue' {
   import { DefineComponent } from 'vue'
@@ -15,22 +13,6 @@ declare module '*.mjs' {
 
 interface Window {
   enumsList: string[]
+  SYSTEMS: Record<string, string>
 }
 
-declare module 'vue-router' {
-  // import { RouteRecordRaw } from 'vue-router'
-  export interface Router {
-    openInTab(route: RouteRecordRaw): void
-    smartBack(route: RouteRecordRaw): void
-  }
-}
-
-declare module 'vuex' {
-  export interface Store<S> {
-    _router: Router
-  }
-}
-
-// export declare interface LocalMeta {
-//   authorities: string[]
-// }
