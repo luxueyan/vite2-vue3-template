@@ -2,7 +2,7 @@ export default [
   {
     name: 'demo',
     path: 'demo',
-    component: () => import('./Demo'),
+    component: () => import('./Index.vue'),
     meta: {},
   },
 ]

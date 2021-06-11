@@ -1,3 +1,4 @@
+import { earcut } from 'earcur';
 
 declare module '*.vue' {
   import { DefineComponent } from 'vue'

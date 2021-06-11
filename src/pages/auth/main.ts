@@ -3,7 +3,9 @@ import filter from './common/filter'
 import './index.css'
 import router from './router'
 import store from './store'
+import * as earcut from 'earcut'
 
+;(window as any).earcut = earcut
 app.use(store)
 app.use(filter)
 router.run(app)

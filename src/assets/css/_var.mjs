@@ -5,8 +5,7 @@ export const customMedia = {
 export const customProperties = {
 	'--color-blue': 'blue',
 	'--color-yellow': 'yellow',
-	'--color-orange': 'orange',
-	'--color-demo': 'gray'
+	'--color-orange': 'orange'
 };
 
 export const customSelectors = {
